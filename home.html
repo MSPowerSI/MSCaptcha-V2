@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MSCaptcha V2</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Contato</h2>
+        <form class="form-horizontal recaptchaForm" method="post">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input required type="email" class="form-control" id="email" placeholder="Digite seu E-mail" name="email">
+            </div>
+            <div class="form-group">
+                <label for="msg">Mensagem:</label>
+                <textarea required minlength="15" class="form-control" rows="7" id="msg" placeholder="Escreva a Mensagem" name="msg"></textarea>
+            </div>
+
+            <div class="g-recaptcha" style="margin-bottom: 10px;" data-sitekey="keyhere"></div>
+
+            <div class="form-group">
+                <button type="submit" id="enviar" class="btn btn-primary btn-block" data-callback="onRecaptchaSuccess">Enviar</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+<script>
+    const campoEmail = document.getElementById('email');
+    const campoMsg = document.getElementById('msg');
+    let emailValido = campoEmail.checkValidity();
+    let msgValidada = campoMsg.checkValidity();
+    let recaptchaValidado = false;
+
+    function onRecaptchaSuccess() {
+        console.log('validado')
+        recaptchaValidado = true;
+    }
+
+    campoEmail.addEventListener('keyup', function () {
+        emailValido = campoEmail.checkValidity();
+    });
+
+    campoMsg.addEventListener('keyup', function () {
+        msgValidada = campoMsg.checkValidity();
+    });
+
+    $(document).ready(function () {
+        var btn = document.getElementById("enviar");
+        btn.addEventListener('click', function() {
+            if (!emailValido || !msgValidada) return alert('Preencha o formulário corretamente.');
+
+            var email = document.getElementById("email").value;
+            var message = document.getElementById("msg").value;
+            
+            Email.send({
+                Host : "smtp.gmail.com",
+                Username : "emailhere",
+                Password : "passwordhere",
+                To : 'emailhere',
+                From : email,
+                Subject : "Formulário de Contato",
+                Body : message
+            });
+        });
+
+        $(".recaptchaForm").on('submit', function (event) {
+            var recaptcha = $("#g-recaptcha-response").val();
+            if (recaptcha === "") {
+                alert("Me prove que você não é um robô!")
+            } else {
+                alert('Email enviado com sucesso!')
+            }
+        })
+    });
+</script>
+</html>
