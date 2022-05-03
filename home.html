@@ -74,7 +74,7 @@
 
         $(".recaptchaForm").on('submit', function (event) {
             var recaptcha = $("#g-recaptcha-response").val();
-            if (recaptcha === "") {
+            if (!recaptcha || recaptcha === "") {
                 alert("Me prove que você não é um robô!")
             } else {
                 alert('Email enviado com sucesso!')
